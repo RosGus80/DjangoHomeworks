@@ -1,0 +1,26 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Техника",
+      "desc": "Tech"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Продукты",
+      "desc": "Food and stuff"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 3,
+    "fields": {
+      "name": "Крутые штуки",
+      "desc": "Basically everything that makes you feel just better than everyone else"
+    }
+  }
+]
