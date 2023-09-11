@@ -23,4 +23,4 @@ def base_item(request):
     context = {
         'product': item[0]
     }
-    return render(request, 'catalog/base_item.html', context)
+    return render(request, 'catalog/base.html', context)
