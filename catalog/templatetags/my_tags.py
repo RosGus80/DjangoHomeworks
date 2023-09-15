@@ -1,12 +1,14 @@
-import datetime
 from django import template
 
 register = template.Library()
 
 
-@register.filter
-def mediapath(img_path: str):
+@register.filter()
+def mediapath(val):
     """convert relative path to absolute path"""
-    return f'/media/{img_path}'
+    if val:
+        return f'/media/{val}'
+    else:
+        return ''
 
 
