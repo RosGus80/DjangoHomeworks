@@ -1,0 +1,27 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+
+{% block content %}
+
+<div class="container">
+        <div class="row text-center">
+            <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h1 class="my-0 font-weight-normal">{{post.title}}</h1>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ post.pic|mediapath }}"/>
+                        <h4> {{post.text}} </h4>
+
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li>- posted {{post.date}}</li>
+                            <li>- {{post.views}} views</li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

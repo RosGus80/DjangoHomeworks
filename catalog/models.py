@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -30,3 +32,20 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=50, verbose_name="Заголовок")
+    slug = models.CharField(max_length=100, verbose_name="slug")
+    text = models.TextField(verbose_name="содержимое")
+    pic = models.ImageField(upload_to='previews/', verbose_name='Картинка', null=True, blank=True)
+    date = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
+    is_published = models.BooleanField(verbose_name="признак публикации")
+    views = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.slug
+
+    class Meta:
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
