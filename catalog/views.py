@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import View
-from django.views.generic import ListView, TemplateView, CreateView, DetailView
+from django.views.generic import ListView, TemplateView, CreateView, DetailView, UpdateView, DeleteView
 
 from catalog.models import Product, Post
 
@@ -54,6 +54,19 @@ class PostDetailView(DetailView):
         self.object.views += 1
         self.object.save()
         return self.object
+
+
+class PostUpdateView(UpdateView):
+    model = Post
+    fields = ("title", "text", "pic", "is_published",)
+    success_url = reverse_lazy('catalog:feed')
+    template_name = 'catalog/create.html'
+
+
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = reverse_lazy('catalog:feed')
+    template_name = 'catalog/confirm_delete.html'
 
 # def home(request):
 #     items = Product.objects.all()
