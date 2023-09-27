@@ -23,8 +23,8 @@ class Product(models.Model):
     preview = models.ImageField(upload_to='previews/', verbose_name='Картинка', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория', null=True, blank=True)
     price = models.IntegerField(verbose_name='Цена')
-    date = models.DateTimeField(verbose_name='Дата добавления')
-    ChangeDate = models.DateTimeField(verbose_name='Дата последнего изменения')
+    date = models.DateTimeField(verbose_name='Дата добавления', null=True, blank=True)
+    ChangeDate = models.DateTimeField(verbose_name='Дата последнего изменения', null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -49,3 +49,10 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Версия', null=True, blank=True)
+    number = models.FloatField(default=1, verbose_name='Номер версии')
+    name = models.CharField(max_length=50, verbose_name='Название версии')
+    is_active = models.BooleanField(verbose_name='Признак активной версии')

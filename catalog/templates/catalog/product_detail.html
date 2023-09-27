@@ -1,0 +1,38 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+
+{% block content %}
+
+<div class="container">
+        <div class="row text-center">
+            <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h1 class="my-0 font-weight-normal">{{object.name}}</h1>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ object.preview|mediapath }}"/>
+                        <h4> {{object.desc}} </h4>
+
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li>- cost {{object.price}}</li>
+                        </ul>
+
+                        {% for version in versions %}
+                            {% if version.product.name == object.name %}
+                                {% if version.is_active is True %}
+                                    <h4>Версия: {{version.name}} {{version.number}}</h4>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        <a class="text-muted" href="{{object.pk}}/versions/">Посмотреть все версии продукта</a>
+                        <a class="text-muted" href="/feed/products/update/{{object.pk}}">Отредактировать</a>
+                        <a class="text-muted" href="/feed/products/delete/{{object.pk}}">Удалить</a>
+                        <a class="text-muted" href="/joke">Купить</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

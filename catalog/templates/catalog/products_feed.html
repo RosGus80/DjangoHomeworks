@@ -1,0 +1,35 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+
+
+{% block content %}
+
+<a href='/feed/products/create'>Добавить товар</a>
+<a href='/feed/products/create_version'>Добавить версию товара</a>
+    {% for product in products %}
+
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h2 class="my-0 font-weight-normal">{{product.name}}</h2>
+                    </div>
+                    <div class="card-body">
+                        <img src="{{ product.preview|mediapath }}"/>
+                        <h3 class="card-title pricing-card-title">{{product.price}}</h3>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li>- {{product.desc}}</li>
+                            <li>- {{product.category}}</li>
+                            <li>- {{product.date}}</li>
+                        </ul>
+                        <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                        <a href='products/update/{{product.pk}}'>Редактировать</a>
+                        <a href='products/product/{{product.pk}}'>Посмотреть</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

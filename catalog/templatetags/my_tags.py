@@ -7,7 +7,7 @@ register = template.Library()
 def mediapath(val):
     """convert relative path to absolute path"""
     if val:
-        return f'/media/{val}'
+        return f'/previews/{val}'
     else:
         return ''
 
