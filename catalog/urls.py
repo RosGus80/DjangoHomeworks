@@ -3,13 +3,14 @@ from django.urls import path
 from catalog.views import ProductsFeedView, ContactsView, IndexView, PostCreateView, FeedView, PostDetailView, \
     PostUpdateView, \
     PostDeleteView, ProductCreateView, ProductUpdateView, ProductDetailView, ProductDeleteView, Joke, VersionCreateView, \
-    VersionUpdateView, VersionDeleteView, ProductVersionsView
+    VersionUpdateView, VersionDeleteView, ProductVersionsView, AccessDeniedView
 
 app_name = 'catalog'
 
 
 urlpatterns = [
     path('', IndexView.as_view(), name='home'),
+    path('AccessDenied', AccessDeniedView.as_view(), name='denied'),
     path('contacts/', ContactsView.as_view(), name='contacts'),
     path('create/', PostCreateView.as_view(), name="create"),
     path('feed/', FeedView.as_view(), name='feed'),

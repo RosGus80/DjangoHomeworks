@@ -2,6 +2,8 @@ import datetime
 
 from django.db import models
 
+from users.models import User
+
 
 # Create your models here.
 
@@ -25,6 +27,8 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name='Цена')
     date = models.DateTimeField(verbose_name='Дата добавления', null=True, blank=True)
     ChangeDate = models.DateTimeField(verbose_name='Дата последнего изменения', null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор',
+                               blank=True, null=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -42,6 +46,8 @@ class Post(models.Model):
     date = models.DateTimeField(verbose_name="дата создания", auto_now_add=True)
     is_published = models.BooleanField(verbose_name="признак публикации")
     views = models.IntegerField(default=0)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор',
+                               blank=True, null=True)
 
     def __str__(self):
         return self.slug

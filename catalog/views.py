@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -9,6 +11,10 @@ from catalog.models import Product, Post, Version
 
 
 # Create your views here.
+
+
+class AccessDeniedView(TemplateView):
+    template_name = 'catalog/access_denied.html'
 
 
 class ContactsView(TemplateView):
@@ -24,7 +30,7 @@ class IndexView(TemplateView):
         return context_data
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ("title", "text", "pic", "is_published", )
     success_url = reverse_lazy('catalog:feed')
@@ -33,6 +39,7 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         if form.is_valid():
             new_post = form.save()
+            new_post.author = self.request.user
             new_post.slug = slugify(new_post.title)
             new_post.save()
         return super().form_valid(form)
@@ -57,14 +64,14 @@ class PostDetailView(DetailView):
         return self.object
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ("title", "text", "pic", "is_published",)
     success_url = reverse_lazy('catalog:feed')
     template_name = 'catalog/create.html'
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = reverse_lazy('catalog:feed')
     template_name = 'catalog/confirm_delete.html'
@@ -79,14 +86,20 @@ class ProductsFeedView(TemplateView):
         return context_data
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/create.html'
 
+    def form_valid(self, form):
+        product = form.save(commit=False)
+        product.author = self.request.user
+        product.save()
+        return super().form_valid(form)
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products feed')
@@ -96,13 +109,14 @@ class ProductUpdateView(UpdateView):
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['versions'] = Version.objects.all()
         return context_data
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/confirm_delete_product.html'
@@ -112,21 +126,21 @@ class Joke(TemplateView):
     template_name = 'catalog/joke.html'
 
 
-class VersionCreateView(CreateView):
+class VersionCreateView(LoginRequiredMixin, CreateView):
     model = Version
     form_class = VersionForm
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/create.html'
 
 
-class VersionUpdateView(UpdateView):
+class VersionUpdateView(LoginRequiredMixin, UpdateView):
     model = Version
     form_class = VersionForm
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/create.html'
 
 
-class VersionDeleteView(DeleteView):
+class VersionDeleteView(LoginRequiredMixin, DeleteView):
     model = Version
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/confirm_delete_product.html'
