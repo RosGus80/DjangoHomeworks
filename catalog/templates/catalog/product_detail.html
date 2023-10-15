@@ -16,7 +16,7 @@
 
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                             <li>- cost {{object.price}}</li>
-                            <li>- by: {{object.author}} </li>
+                            <li>- owner's email: {{object.author}} </li>
                         </ul>
 
                         {% for version in versions %}
@@ -27,8 +27,13 @@
                             {% endif %}
                         {% endfor %}
                         <a class="text-muted" href="{{object.pk}}/versions/">Посмотреть все версии продукта</a>
+                        {% if perms.catalog.change_product or product.author == user %}
                         <a class="text-muted" href="/feed/products/update/{{object.pk}}">Отредактировать</a>
+                        {% endif %}
+                        {% if perms.catalog.delete_product or product.author == user %}
                         <a class="text-muted" href="/feed/products/delete/{{object.pk}}">Удалить</a>
+                        {%endif%}
+
                         <a class="text-muted" href="/joke">Купить</a>
 
                     </div>

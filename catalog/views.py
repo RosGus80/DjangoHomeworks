@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -64,17 +64,29 @@ class PostDetailView(DetailView):
         return self.object
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ("title", "text", "pic", "is_published",)
     success_url = reverse_lazy('catalog:feed')
     template_name = 'catalog/create.html'
 
+    def test_func(self):
+        if self.request.user.has_perm('catalog.change_post') or self.get_object().author == self.request.user:
+            return True
+        else:
+            return False
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     success_url = reverse_lazy('catalog:feed')
     template_name = 'catalog/confirm_delete.html'
+
+    def test_func(self):
+        if self.request.user.has_perm('catalog.delete_post') or self.get_object().author == self.request.user:
+            return True
+        else:
+            return False
 
 
 class ProductsFeedView(TemplateView):
@@ -89,6 +101,7 @@ class ProductsFeedView(TemplateView):
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
+    permission_required = 'catalog.create_product'
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/create.html'
 
@@ -99,11 +112,17 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/create.html'
+
+    def test_func(self):
+        if self.request.user.has_perm('catalog.change_product') or self.get_object().author == self.request.user:
+            return True
+        else:
+            return False
 
 
 class ProductDetailView(DetailView):
@@ -116,10 +135,16 @@ class ProductDetailView(DetailView):
         return context_data
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:products feed')
     template_name = 'catalog/confirm_delete_product.html'
+
+    def test_func(self):
+        if self.request.user.has_perm('catalog.delete_product') or self.get_object().author == self.request.user:
+            return True
+        else:
+            return False
 
 
 class Joke(TemplateView):
@@ -154,6 +179,8 @@ class ProductVersionsView(DetailView):
         context_data = super().get_context_data(**kwargs)
         context_data['versions'] = Version.objects.all()
         return context_data
+
+    
 # def home(request):
 #     items = Product.objects.all()
 #     context = {

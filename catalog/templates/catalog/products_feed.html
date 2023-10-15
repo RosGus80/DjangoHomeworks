@@ -7,7 +7,7 @@
 <a href='/feed/products/create'>Добавить товар</a>
 <a href='/feed/products/create_version'>Добавить версию товара</a>
     {% for product in products %}
-
+    {% if product.is_published %}
     <div class="container">
         <div class="row text-center">
             <div class="col-3">
@@ -23,13 +23,16 @@
                             <li>- {{product.category}}</li>
                             <li>- {{product.date}}</li>
                         </ul>
-                        <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                        <button type="button" class="btn btn-lg btn-block btn-outline-primary"><a href="/joke">Купить</a></button>
+                        {% if perms.catalog.change_product  or product.author == user %}
                         <a href='products/update/{{product.pk}}'>Редактировать</a>
+                        {% endif %}
                         <a href='products/product/{{product.pk}}'>Посмотреть</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
 {% endblock %}

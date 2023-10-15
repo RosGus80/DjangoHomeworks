@@ -8,7 +8,7 @@ from catalog.models import Product, Category, Post, Version
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price')
+    list_display = ('id', 'name', 'price', 'is_published')
     list_filter = ('price', )
     search_fields = ('name', 'desc')
 
