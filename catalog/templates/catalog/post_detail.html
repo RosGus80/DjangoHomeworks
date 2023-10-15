@@ -16,12 +16,17 @@
 
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                             <li>- posted {{post.date}}</li>
-                            <li>- by: {{post.author}}</li>
+                            <li>- by: {{post.author.first_name}} {{post.author.last_name}}</li>
                             <li>- {{post.views}} views</li>
 
                         </ul>
-                        <a class="text-muted" href="edit/{{ post.slug }}">Отредактировать</a>
-                        <a class="text-muted" href="delete/{{ post.slug }}">Удалить</a>
+                        {% if perms.catalog.change_post  or post.author == user %}
+                        <a class="text-muted" href="/feed/edit/{{ post.slug }}">Отредактировать</a>
+                        {% endif %}
+                        {% if perms.catalog.delete_post  or post.author == user %}
+                        <a class="text-muted" href="/feed/delete/{{ post.slug }}">Удалить</a>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

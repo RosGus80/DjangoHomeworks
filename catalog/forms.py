@@ -6,7 +6,7 @@ from catalog.models import Product, Version
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        exclude = ('ChangeDate', 'date')
+        exclude = ('ChangeDate', 'date', 'author', 'is_published', )
 
     def clean_name(self):
         cleaned_data = self.cleaned_data['name']

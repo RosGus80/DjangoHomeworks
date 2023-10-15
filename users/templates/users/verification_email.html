@@ -1,5 +1,7 @@
-{% autoescape off %}
+
 {% csrf_token %}
+{% autoescape off %}
+
 Hello, {{first_name}}
 Click on the link to verify your email:
 http://{{ domain }}{% url 'users:email' uid64=uid token=token %}

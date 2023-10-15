@@ -20,8 +20,13 @@
 
                             </ul>
                             <a class="text-muted" href="{{ post.slug }}">Открыть</a>
-                            <a class="text-muted" href="edit/{{ post.slug }}">Отредактировать</a>
-                            <a class="text-muted" href="delete/{{ post.slug }}">Удалить</a>
+                            {% if perms.catalog.change_post  or post.author == user %}
+                            <a class="text-muted" href="/feed/edit/{{ post.slug }}">Отредактировать</a>
+                            {% endif %}
+                            {% if perms.catalog.delete_post  or post.author == user %}
+                            <a class="text-muted" href="/feed/delete/{{ post.slug }}">Удалить</a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

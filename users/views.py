@@ -1,11 +1,13 @@
+from django.core.mail import send_mail
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, TemplateView
 
+from config import settings
 from users.forms import UserRegisterForm
 from users.models import User
-from users.utils import verification_email
 
 
 # Create your views here.
@@ -13,18 +15,20 @@ class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'users/login_form.html'
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy('users:verification')
 
+    def form_valid(self, form):
+        self.object = form.save()
 
-class VerificationView(TemplateView):
-    template_name = 'users/verification.html'
+        send_mail(
+            subject='Verification email',
+            message='Congrats',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[self.object.email]
+        )
 
-    def get(self, request, *args, **kwargs):
-        verification_email(request=request, user=request.user)
+        return super().form_valid(form)
 
-
-class EmailVerificationView(View):
-    pass
 
 
 
