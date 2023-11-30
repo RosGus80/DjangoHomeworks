@@ -19,12 +19,12 @@
                             <li>- owner's email: {{object.author}} </li>
                         </ul>
 
-                        {% for version in versions %}
-                            {% if version.product.name == object.name %}
+                        {% for version in object.version_set.all %}
+<!--                            {% if version.product.name == object.name %}-->
                                 {% if version.is_active is True %}
                                     <h4>Версия: {{version.name}} {{version.number}}</h4>
                                 {% endif %}
-                            {% endif %}
+<!--                            {% endif %}-->
                         {% endfor %}
                         <a class="text-muted" href="{{object.pk}}/versions/">Посмотреть все версии продукта</a>
                         {% if perms.catalog.change_product or product.author == user %}

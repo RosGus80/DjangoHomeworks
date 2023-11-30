@@ -3,12 +3,12 @@
 
 {% block content %}
 {% for version in versions %}
-  {% if version.product.name == object.name %}
+<!--  {% if version.product.name == object.name %}-->
     <h4>Название: {{version.name}}</h4>
     <h4>Номер: {{version.number}}</h4>
     <h4>Активна: {{version.is_active}}</h4>
     <a href='/feed/products/delete_version/{{version.pk}}'>Удалить версию</a>
     <a href='/feed/products/edit_version/{{version.pk}}'>Редактировать версию</a>
-  {% endif %}
+<!--  {% endif %}-->
 {% endfor %}
 {% endblock %}

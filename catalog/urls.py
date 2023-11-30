@@ -1,9 +1,10 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from catalog.views import ProductsFeedView, ContactsView, IndexView, PostCreateView, FeedView, PostDetailView, \
     PostUpdateView, \
     PostDeleteView, ProductCreateView, ProductUpdateView, ProductDetailView, ProductDeleteView, Joke, VersionCreateView, \
-    VersionUpdateView, VersionDeleteView, ProductVersionsView, AccessDeniedView
+    VersionUpdateView, VersionDeleteView, ProductVersionsView, AccessDeniedView, CategoryListView
 
 app_name = 'catalog'
 
@@ -20,11 +21,12 @@ urlpatterns = [
     path('feed/products', ProductsFeedView.as_view(), name='products feed'),
     path('feed/products/create', ProductCreateView.as_view(), name='create product'),
     path('feed/products/update/<int:pk>', ProductUpdateView.as_view(), name='update product'),
-    path('feed/products/product/<int:pk>', ProductDetailView.as_view(), name='product view'),
+    path('feed/products/product/<int:pk>', cache_page(60)(ProductDetailView.as_view()), name='product view'),
     path('feed/products/delete/<int:pk>', ProductDeleteView.as_view(), name='delete product'),
     path('joke/', Joke.as_view(), name='joke'),
     path('feed/products/create_version', VersionCreateView.as_view(), name='create version'),
     path('feed/products/edit_version/<int:pk>', VersionUpdateView.as_view(), name='update version'),
     path('feed/products/delete_version/<int:pk>', VersionDeleteView.as_view(), name='delete version'),
     path('feed/products/product/<int:pk>/versions/', ProductVersionsView.as_view(), name='versions of product'),
+    path('feed/categories', CategoryListView.as_view(), name='categories'),
 ]

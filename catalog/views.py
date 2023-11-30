@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -7,7 +9,7 @@ from django.views import View
 from django.views.generic import ListView, TemplateView, CreateView, DetailView, UpdateView, DeleteView
 
 from catalog.forms import ProductForm, VersionForm
-from catalog.models import Product, Post, Version
+from catalog.models import Product, Post, Version, Category
 
 
 # Create your views here.
@@ -129,10 +131,10 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['versions'] = Version.objects.all()
-        return context_data
+    # def get_context_data(self, **kwargs):
+    #     context_data = super().get_context_data(**kwargs)
+    #     context_data['versions'] = Version.objects.all()
+    #     return context_data
 
 
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -177,10 +179,38 @@ class ProductVersionsView(DetailView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['versions'] = Version.objects.all()
+        if settings.CACHE_ENABLED:
+            versions_list = cache.get(f'version_set_{self.object.pk}')
+            if versions_list is None:
+                versions_list = self.object.version_set.all()
+                cache.set(f'version_set_{self.object.pk}', versions_list)
+        else:
+            versions_list = self.object.version_set.all()
+
+        context_data['versions'] = versions_list
+
         return context_data
 
-    
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'catalog/category_all.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if settings.CACHE_ENABLED:
+            category_list = cache.get('categories')
+            if category_list is None:
+                category_list = Category.objects.all()
+                cache.set('categories', category_list)
+        else:
+            category_list = Category.objects.all()
+
+        context_data['objects'] = category_list
+
+        return context_data
+
+
 # def home(request):
 #     items = Product.objects.all()
 #     context = {

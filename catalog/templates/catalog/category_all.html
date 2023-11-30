@@ -1,0 +1,9 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+
+{% block content %}
+        {% for object in objects %}
+            <h1>{{object.name}}</h1>
+        {% endfor %}
+
+{% endblock %}
