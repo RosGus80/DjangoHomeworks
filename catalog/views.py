@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views import View
 from django.views.generic import ListView, TemplateView, CreateView, DetailView, UpdateView, DeleteView
+from catalog.management.commands.get_categories import Command
 
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Post, Version, Category
@@ -198,15 +199,9 @@ class CategoryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        if settings.CACHE_ENABLED:
-            category_list = cache.get('categories')
-            if category_list is None:
-                category_list = Category.objects.all()
-                cache.set('categories', category_list)
-        else:
-            category_list = Category.objects.all()
 
-        context_data['objects'] = category_list
+        command = Command()
+        context_data['objects'] = command.get_cached_list()
 
         return context_data
 
