@@ -63,3 +63,10 @@ class Version(models.Model):
     number = models.FloatField(default=1, verbose_name='Номер версии')
     name = models.CharField(max_length=50, verbose_name='Название версии')
     is_active = models.BooleanField(verbose_name='Признак активной версии')
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = 'Версия'
+        verbose_name_plural = 'Версии'

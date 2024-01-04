@@ -16,7 +16,7 @@ class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'users/login_form.html'
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy('users:checkemail')
 
     def form_valid(self, form):
         self.object = form.save()
@@ -47,7 +47,11 @@ def change_password(request, user_pk):
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[user.email])
 
-    return redirect(reverse_lazy('catalog:feed'))
+    return redirect(reverse_lazy('catalog:checkemail'))
+
+
+class CheckEmail(TemplateView):
+    template_name = 'users/verification.html'
 
 
 def verification(request, verification_code, user_pk):

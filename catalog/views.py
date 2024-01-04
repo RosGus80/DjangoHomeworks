@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import ListView, TemplateView, CreateView, DetailView, UpdateView, DeleteView
 from catalog.services import GetCachedCategories
 
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, ProductModerForm
 from catalog.models import Product, Post, Version, Category
 
 
@@ -122,7 +122,10 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'catalog/create.html'
 
     def test_func(self):
-        if self.request.user.has_perm('catalog.change_product') or self.get_object().author == self.request.user:
+        if self.get_object().author == self.request.user:
+            return True
+        elif self.request.user.groups.filter(name='ProductModer').exists():
+            self.form_class = ProductModerForm
             return True
         else:
             return False
