@@ -1,0 +1,11 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+
+    <h2>{{object.name}}</h2>
+    <h3>Почта: {{object.email}}</h3>
+    <h4>Верифицирован: {{object.is_verified}}</h4>
+    <a href="{% url 'users:change_password' user_pk=object.id %}">Сменить пароль</a>
+
+
+{% endblock %}

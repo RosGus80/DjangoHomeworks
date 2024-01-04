@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 
 from config import settings
 from users.forms import UserRegisterForm
@@ -30,6 +30,24 @@ class RegisterView(CreateView):
         )
 
         return super().form_valid(form)
+
+
+class UserDetailView(DetailView):
+    model = User
+    template_name = 'users/user.html'
+
+
+def change_password(request, user_pk):
+    user = User.objects.ger(pk=user_pk)
+    new_password = user.make_random_password(length=12)
+    user.set_password(new_password)
+    send_mail(
+        subject='Your new password',
+        message=f'Your new password is {new_password}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[user.email])
+
+    return redirect(reverse_lazy('catalog:feed'))
 
 
 def verification(request, verification_code, user_pk):
