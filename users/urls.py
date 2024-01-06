@@ -14,6 +14,6 @@ urlpatterns = [
     path('verify/<int:user_pk>/<verification_code>/', verification, name='verification'),
     path('checkemail', CheckEmail.as_view(), name='checkemail'),
     path('user/<int:pk>', UserDetailView.as_view(), name='user'),
-    path('user/change_password/<int:pk>', change_password, name='change_password'),
+    path('user/change_password/<int:user_pk>', change_password, name='change_password'),
 ]
 

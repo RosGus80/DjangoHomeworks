@@ -22,6 +22,8 @@ class RegisterView(CreateView):
         self.object = form.save()
         self.object.verification_code = User.objects.make_random_password(length=10)
 
+        # Письмо верификации
+
         send_mail(
             subject='Verification email',
             message=f'Follow this link to verify your account: http://127.0.0.1:8000/users/verify/{self.object.pk}/{self.object.verification_code}/',
@@ -38,8 +40,9 @@ class UserDetailView(DetailView):
 
 
 def change_password(request, user_pk):
-    user = User.objects.ger(pk=user_pk)
-    new_password = user.make_random_password(length=12)
+    # Смена пароля на автоматические сгенерированный
+    user = User.objects.get(pk=user_pk)
+    new_password = User.objects.make_random_password(length=12)
     user.set_password(new_password)
     send_mail(
         subject='Your new password',
@@ -47,7 +50,7 @@ def change_password(request, user_pk):
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[user.email])
 
-    return redirect(reverse_lazy('catalog:checkemail'))
+    return redirect(reverse_lazy('users:checkemail'))
 
 
 class CheckEmail(TemplateView):

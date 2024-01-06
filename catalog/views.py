@@ -92,7 +92,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return False
 
 
-class ProductsFeedView(TemplateView):
+class ProductsFeedView(LoginRequiredMixin, TemplateView):
     template_name = 'catalog/products_feed.html'
 
     def get_context_data(self, **kwargs):
@@ -131,7 +131,7 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return False
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
 
